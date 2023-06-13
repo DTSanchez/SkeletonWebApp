@@ -21,7 +21,7 @@ public class QueryProcessor {
       return "My name is Diego";
     }
 
-    if(query.toLowerCase().startsWith("what is ")) {
+    if(query.toLowerCase().contains("plus")) {
 
       Integer result = getDigitFromString(query).stream()
         .mapToInt(Integer::intValue).sum();
@@ -29,11 +29,18 @@ public class QueryProcessor {
       return result.toString();
     }
 
-    if(query.toLowerCase().startsWith("which of the following numbers is the largest: ")) {
+    if(query.toLowerCase().contains("largest")) {
         OptionalInt result = getDigitFromString(query).stream()
           .mapToInt(Integer::intValue).max();
 
         return result.isPresent() ? result.toString() : "";
+    }
+
+    if(query.toLowerCase().contains("multiplied")) {
+        Integer result = getDigitFromString(query)
+          .stream().reduce(1, (a, b) -> a * b);
+
+        return result.toString();
     }
 
     return "";
