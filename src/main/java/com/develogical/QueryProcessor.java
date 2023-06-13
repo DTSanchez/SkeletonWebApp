@@ -1,6 +1,8 @@
 package com.develogical;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 public class QueryProcessor {
@@ -21,10 +23,24 @@ public class QueryProcessor {
 
     if(query.toLowerCase().startsWith("what is ")) {
 
-      //query = query.replaceAll(",", "").replaceAll("?", "");
-      //query = query.replaceAll("\\D+", "");
+      Integer result = getDigitFromString(query).stream()
+        .mapToInt(Integer::intValue).sum();
 
-      List<String> words = List.of(query.split(" "));
+      return result.toString();
+    }
+
+    if(query.toLowerCase().startsWith("which of the following numbers is the largest: ")) {
+        OptionalInt result = getDigitFromString(query).stream()
+          .mapToInt(Integer::intValue).max();
+
+        return result.isPresent() ? result.toString() : "";
+    }
+
+    return "";
+  }
+
+  private List<Integer> getDigitFromString(String string) {
+      List<String> words = List.of(string.split(" "));
       
       List<Integer> digits = words.stream()
         .map(s -> s.replaceAll("\\D+", ""))
@@ -32,14 +48,6 @@ public class QueryProcessor {
         .map(numberString -> Integer.valueOf(numberString))
         .collect(Collectors.toList());
 
-      Integer result = digits.stream().mapToInt(Integer::intValue).sum();
-      return result.toString();
-    }
-
-    if(query.toLowerCase().startsWith("which of the following numbers is the largest: ")) {
-
-    }
-
-    return "";
+        return digits;
   }
 }
